@@ -14,22 +14,23 @@ namespace QuizComputation.Model.CustomModel
 
         public string Question_txt { get; set; }
 
-        public List<OptionViewModel> Options { get; set; }
-
-        public QuestionModel()
-        {
-            Options = new List<OptionViewModel>();
-        }
-
         public Nullable<System.DateTime> Created_at { get; set; }
         public Nullable<System.DateTime> Updated_at { get; set; }
     }
-
-    public class OptionViewModel
+    public class OptionQuestionModel
     {
-        public int Option_Id { get; set; }
-        public Nullable<int> Question_id { get; set; }
-        public string Option_Text { get; set; }
-        public bool IsCorrect { get; set; }
+        public int quizId { get; set; }
+        public string question { get; set; }
+
+        public string options1 { get; set; }
+
+        public string options2 { get; set; }
+
+        public string options3 { get; set; }
+
+        public string options4 { get; set; }
+
+        public string Answers { get; set; }
+
     }
 }

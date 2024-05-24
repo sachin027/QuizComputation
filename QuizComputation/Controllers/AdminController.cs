@@ -56,10 +56,13 @@ namespace QuizComputation.Controllers
             }
         }
 
-        public ActionResult AddQuestionIntoQuiz()
+        public ActionResult AddQuestionIntoQuiz(int QuizID , string description , string title)
         {
             try
             {
+                ViewBag.QuizID = QuizID;
+                ViewBag.description = description;
+                ViewBag.title = title;
                 return View();
             }
             catch (Exception ex)
@@ -69,13 +72,13 @@ namespace QuizComputation.Controllers
             }
         }
         [HttpPost]
-        public ActionResult AddQuestionIntoQuiz(QuestionModel question)
+        public ActionResult AddQuestionIntoQuiz(List<OptionQuestionModel> _QustionAddingModel)
         {
             try
             {
-                _quizService.AddQuestionWithOptions(question);
-                ViewBag.Message = "Question added successfully";
-                return View("AdminDashboard");
+                ViewBag.created_by = SessionHelper.SessionHelper.user_id;
+                _quizService.AddQuestion(_QustionAddingModel);
+                return View();
             }
             catch (Exception ex)
             {

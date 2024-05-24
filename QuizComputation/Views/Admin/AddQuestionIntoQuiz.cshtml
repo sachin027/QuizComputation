@@ -1,198 +1,187 @@
-﻿@model QuizComputation.Model.CustomModel.QuestionModel
+﻿
 @{
     Layout = "~/Views/Shared/_LayoutAdminPage.cshtml";
 }
 <div class="card mt-3 ">
         <h5 class="card-header">Add Question</h5>
-    <div class="card-body ">
-        <form method="post" class="was-validated">
-            <div class="card  justify-content-center question-container mb-5">
-                <div class="card-body  p-2  w-50 mx-auto">
-                    <div class="form-group">
-                        <label class="form-check-label">Question 1</label>
+        <div class="card-body ">
+            <input type="text" value="@ViewBag.QuizID" name="id" class="form-control" readonly id="QuizId" />
+            <input type="text" value="@ViewBag.description" class="form-control" readonly id="description" />
+            <input type="text" value="@ViewBag.title" class="form-control" readonly id="description" />
 
-                        @Html.TextAreaFor(model => model.Question_txt, new { @class = "form-control", @required = "Required" })
-                        <div class="invalid-feedback">
-                            Please enter Question.
-                        </div>
-                        <div class="valid-feedback">
-                            Looks good !
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                @Html.Label("Option 1", htmlAttributes: new { @class = "control-label" })
-                                @Html.TextBoxFor(x => x.Options[0].Option_Text);
-                                @*@Html.TextBox("options[0]", null, new { @class = "form-control", @required = "Required" })*@
-                                <div class="invalid-feedback">
-                                    Please enter option Text.
-                                </div>
-                                <div class="valid-feedback">
-                                    Looks good !
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                @Html.Label("Option 2", htmlAttributes: new { @class = "control-label" })
-                                @Html.TextBox("options[1]", null, new { @class = "form-control", @required = "Required" })
-                                <div class="invalid-feedback">
-                                    Please enter option Text.
-                                </div>
-                                <div class="valid-feedback">
-                                    Looks good !
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                @Html.Label("Option 3", htmlAttributes: new { @class = "control-label" })
-                                @Html.TextBox("options[2]", null, new { @class = "form-control" , @required = "Required" })
-                                <div class="invalid-feedback">
-                                    Please enter option Text.
-                                </div>
-                                <div class="valid-feedback">
-                                    Looks good !
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                @Html.Label("Option 4", htmlAttributes: new { @class = "control-label" })
-                                @Html.TextBox("options[3]", null, new { @class = "form-control", @required = "Required" })
-                                <div class="invalid-feedback">
-                                    Please enter option Text.
-                                </div>
-                                <div class="valid-feedback">
-                                    Looks good !
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <input type="button" name="AddQuestion" id="AddQuestion" value="Add" class="btn btn-outline-info mb-4" onclick="AddQuestionHTML()"/>
 
-                    <div class="form-group">
-                        @Html.Label("Correct Answer", htmlAttributes: new { @class = "control-label", @required = "Required" })
-                        <select class="form-select form-control">
-                            <option selected hidden>Choose correct answer</option>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                            <option value="4">Option 4</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            Please select answer.
+            <form method="post" class="was-validated" id="addQuestion">
+                <div id="QuestionMainDiv">
+                    <div class="question">
+                        <textarea class="question-text form-control dynamic" name="question">Question</textarea>
+                        <div class="validation-message"></div>
+                        <div class="answers">
+                            <div class="answer-pair">
+                                <label style="white-space: nowrap; margin-top: 11px;">Option 1</label>
+                                <input type="text" name="options1" class="options form-control p-2 m-2 dynamic" />
+                                <span class="validation-message"><br></span>
+
+                                <label style="white-space: nowrap; margin-top: 11px;">Option 2</label>
+                                <input type="text" name="options2" class="options form-control p-2 m-2 dynamic" />
+                                <span class="validation-message"></span>
+                            </div>
+                            <div class="answer-pair">
+                                <label style="white-space: nowrap; margin-top: 11px;">Option 3</label>
+                                <input type="text" name="options3" class="options form-control p-2 m-2 dynamic" />
+                                <span class="validation-message"></span>
+                                <label style="white-space: nowrap; margin-top: 11px;">Option 4</label>
+                                <input type="text" name="options4" class="options form-control p-2 m-2 dynamic" />
+                                <span class="validation-message"></span>
+                            </div>
                         </div>
-                        <div class="valid-feedback">
-                            Looks good !
+                        <div class="add-answers">
+                            <label>Correct Answers</label>
+                            <select class="form-select AnswersClasss dynamic" name="Answers">
+                                <option value="Select Answers" selected>Select Answers</option>
+                                <option>A</option>
+                                <option>B</option>
+                                <option>C</option>
+                                <option>D</option>
+                            </select>
+                            <span class="validation-message"></span> <!-- Validation message for select option -->
                         </div>
                     </div>
                 </div>
-            </div>
-            <button type="button" id="add-question-btn" class="btn btn-primary" onclick="AddQuestion()">Add Question</button>
-            <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
+                <input type="button" name="submit" id="submit" value="submit" />
+            </form>
+        </div>
 </div>
 
 <script>
-    var QuestionIndex = 2;
-    function AddQuestion() {
-        if (QuestionIndex < 6) {
-        var QuestionHTML = `<div class="card bg-light justify-content-center">
-                <div class="card-body  p-2 w-50 mx-auto">
-                    <div class="form-group">
-                        <label class="form-check-label">Question ${QuestionIndex}</label>
+    $(document).ready(function () {
+        var UserData = [];
+        var questionCount = 1;
 
-                                                @Html.TextAreaFor(model => model.Question_txt, new { @class = "form-control", @required = "Required" })
-                        <div class="invalid-feedback">
-                            Please enter Question.
-                        </div>
-                        <div class="valid-feedback">
-                            Looks good !
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                @Html.Label("Option 1", htmlAttributes: new { @class = "control-label" })
-                                @Html.TextBox("options[0]", null, new { @class = "form-control", @required = "Required" })
-                                <div class="invalid-feedback">
-                                    Please enter option Text.
-                                </div>
-                                <div class="valid-feedback">
-                                    Looks good !
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                @Html.Label("Option 2", htmlAttributes: new { @class = "control-label" })
-                                @Html.TextBox("options[1]", null, new { @class = "form-control", @required = "Required" })
-                                <div class="invalid-feedback">
-                                    Please enter option Text.
-                                </div>
-                                <div class="valid-feedback">
-                                    Looks good !
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                @Html.Label("Option 3", htmlAttributes: new { @class = "control-label" })
-                                @Html.TextBox("options[2]", null, new { @class = "form-control" , @required = "Required" })
-                                <div class="invalid-feedback">
-                                    Please enter option Text.
-                                </div>
-                                <div class="valid-feedback">
-                                    Looks good !
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                @Html.Label("Option 4", htmlAttributes: new { @class = "control-label" })
-                                @Html.TextBox("options[3]", null, new { @class = "form-control", @required = "Required" })
-                                <div class="invalid-feedback">
-                                    Please enter option Text.
-                                </div>
-                                <div class="valid-feedback">
-                                    Looks good !
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        $('#AddQuestion').on('click', function () {
+            if (validateQuestions() && validateOptions() && validateCorrectAnswers()) {
+                if (questionCount < 5) {
+                    var div = `
+                        <div class="question">
+                        <textarea class="question-text form-control dynamic" name="question">Question</textarea>
+                        <div class="validation-message"></div>
+                        <div class="answers">
+                        <div class="answer-pair">
+                        <label style="white-space: nowrap; margin-top: 11px;">Option 1</label>
+                        <input type="text" name="options1" class="options form-control p-2 m-2 dynamic" />
+                        <span class="validation-message"></span>
 
-                    <div class="form-group">
-                        @Html.Label("Correct Answer", htmlAttributes: new { @class = "control-label", @required = "Required" })
-                        <select class="form-select form-control">
-                            <option  hidden>Choose correct answer</option>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                            <option value="4">Option 4</option>
+                                                            <label style="white-space: nowrap; margin-top: 11px;">Option 2</label>
+                        <input type="text" name="options2" class="options form-control p-2 m-2 dynamic" />
+                        <span class="validation-message"></span>
+                        </div>
+                        <div class="answer-pair">
+                        <label style="white-space: nowrap; margin-top: 11px;">Option 3</label>
+                        <input type="text" name="options3" class="options form-control p-2 m-2 dynamic" />
+                        <span class="validation-message"></span>
+
+                                                            <label style="white-space: nowrap; margin-top: 11px;">Option 4</label>
+                        <input type="text" name="options4" class="options form-control p-2 m-2 dynamic" />
+                        <span class="validation-message"></span>
+                        </div>
+                        </div>
+                        <div class="add-answers">
+                        <label>Correct Answers</label>
+                        <select class="form-select AnswersClasss dynamic" name="Answers">
+                        <option value="Select Answers" selected>Select Answers</option>
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                        <option>D</option>
                         </select>
-                        <div class="invalid-feedback">
-                            Please select answer.
+                        <span class="validation-message"></span>
                         </div>
-                        <div class="valid-feedback">
-                            Looks good !
-                        </div>
-                    </div>
-                </div>
-            </div>`
-
-            $('.question-container').append(QuestionHTML);
-            QuestionIndex++;
-
-
-            if (QuestionIndex == 6) {
-                $("#add-question-btn").prop("disabled", true);
+                        </div>`;
+                    $('#QuestionMainDiv').append(div);
+                    questionCount++;
+                } else {
+                    $('#AddQuestion').prop('disabled', true);
+                }
+            } else {
+                alert('Please fill out all question fields before adding a new question.');
             }
+        });
+
+        function validateQuestions() {
+            var isValid = true;
+            $('.question-text').each(function () {
+                if ($.trim($(this).val()) === '') {
+                    isValid = false;
+                    $(this).addClass('is-invalid');
+                    $(this).siblings('.validation-message').text('Please fill out this field.').addClass('text-danger');
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $(this).siblings('.validation-message').text('').removeClass('text-danger');
+                }
+            });
+            return isValid;
         }
-    }
+
+        function validateOptions() {
+            var isValid = true;
+            $('.options').each(function () {
+                if ($.trim($(this).val()) === '') {
+                    isValid = false;
+                    $(this).addClass('is-invalid');
+                    $(this).siblings('.validation-message').text('Please fill out this field.').addClass('text-danger');
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $(this).siblings('.validation-message').text('').removeClass('text-danger');
+                }
+            });
+            return isValid;
+        }
+
+        function validateCorrectAnswers() {
+            var isValid = true;
+            $('.AnswersClasss').each(function () {
+                if ($(this).val() === 'Select Answers') {
+                    isValid = false;
+                    $(this).addClass('is-invalid');
+                    $(this).siblings('.validation-message').text('Please select a correct answer.').addClass('text-danger');
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $(this).siblings('.validation-message').text('').removeClass('text-danger');
+                }
+            });
+            return isValid;
+        }
+
+        $('#submit').on('click', function () {
+            UserData = []; // Clear previous data
+            debugger
+            var dynamicObjects = document.querySelectorAll('.dynamic');
+            for (var i = 0; i < dynamicObjects.length; i += 6) {
+                var DynamicArrayObject = {}
+
+                for (var j = 0; j < 6; j++) {
+                    if (j == 0) {
+                        var quizId = document.getElementById('QuizId').value;
+                        DynamicArrayObject["quizId"] = quizId
+                    }
+                    var element = dynamicObjects[i + j];
+                    var name = element.name;
+                    var value = element.value;
+                    DynamicArrayObject[name] = value;
+                }
+                UserData.push(DynamicArrayObject);
+            }
+            console.log(UserData);
+            $.ajax({
+                url: '/Admin/AddQuestionIntoQuiz',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(UserData),
+                success: function (data) {
+                    console.log(data);
+                }
+
+            })
+        });
+    });
 </script>

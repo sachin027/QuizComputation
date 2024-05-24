@@ -52,6 +52,10 @@
       <Project>{D535BA6D-3941-4846-9474-508CBDB29F1B}</Project>
       <Name>QuizComputation.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\QuizComputation_Helper\QuizComputation_Helper.csproj">
+      <Project>{B4754E6A-3989-4294-BEF7-B1DD5E3E2D56}</Project>
+      <Name>QuizComputation_Helper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

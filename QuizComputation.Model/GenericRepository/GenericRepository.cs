@@ -283,40 +283,34 @@ namespace QuizComputation.Model.GenericRepository
             return quizList;
         }
 
-        public static void AddQuestionWithOptions(QuestionModel question)
+        public static void AddQuestionWithOption(string commandText, Dictionary<string, object> parameters)
         {
-            QuizComputation_452Entities _context = new QuizComputation_452Entities();
-            string connectionString = _context.Database.Connection.ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (QuizComputation_452Entities _context = new QuizComputation_452Entities())
             {
-                connection.Open();
+                string connectionString = _context.Database.Connection.ConnectionString;
 
-                SqlCommand command = new SqlCommand("SP_AddQuestionWithOptions", connection);
-                command.CommandType = CommandType.StoredProcedure;
-
-                command.Parameters.AddWithValue("@QuestionText", question.Question_txt);
-
-                DataTable optionsTable = new DataTable();
-                optionsTable.Columns.Add("Option_Text", typeof(string));
-                optionsTable.Columns.Add("IsCorrect", typeof(bool));
-
-                foreach (var option in question.Options)
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    optionsTable.Rows.Add(option.Option_Text, option.IsCorrect);
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = 120;
+
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                            }
+                        }
+                        command.ExecuteNonQuery();
+
+
+                    }
                 }
-
-                SqlParameter optionsParam = command.Parameters.AddWithValue("@Options", optionsTable);
-                optionsParam.SqlDbType = SqlDbType.Structured;
-                optionsParam.TypeName = "dbo.OptionTableType";
-
-                int questionId = (int)command.ExecuteScalar();
-                // Do something with the questionId if needed
             }
         }
-
-
-
-
     }
 }
