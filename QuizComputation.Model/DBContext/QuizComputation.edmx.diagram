@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ebb089cd485945b4834733d78391ad49" Name="Diagram1" ZoomLevel="72">
+        <EntityTypeShape EntityType="QuizComputation_452Model.Options" Width="1.5" PointX="7.5" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuizComputation_452Model.Questions" Width="1.5" PointX="5.25" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuizComputation_452Model.Quizzes" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuizComputation_452Model.Results" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuizComputation_452Model.User_Answers" Width="1.5" PointX="9.75" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QuizComputation_452Model.Users" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
+        <AssociationConnector Association="QuizComputation_452Model.FK__Options__Questio__4222D4EF" ManuallyRouted="false" />
+        <AssociationConnector Association="QuizComputation_452Model.FK__User_Answ__Selec__49C3F6B7" ManuallyRouted="false" />
+        <AssociationConnector Association="QuizComputation_452Model.FK__Questions__Quiz___3E52440B" ManuallyRouted="false" />
+        <AssociationConnector Association="QuizComputation_452Model.FK__User_Answ__Quest__48CFD27E" ManuallyRouted="false" />
+        <AssociationConnector Association="QuizComputation_452Model.FK__Quizzes__Created__3A81B327" ManuallyRouted="false" />
+        <AssociationConnector Association="QuizComputation_452Model.FK__Results__Quiz_id__4E88ABD4" ManuallyRouted="false" />
+        <AssociationConnector Association="QuizComputation_452Model.FK__User_Answ__Quiz___47DBAE45" ManuallyRouted="false" />
+        <AssociationConnector Association="QuizComputation_452Model.FK__Results__User_id__4D94879B" ManuallyRouted="false" />
+        <AssociationConnector Association="QuizComputation_452Model.FK__User_Answ__User___46E78A0C" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="QuizComputation_452Model.Admin" Width="1.5" PointX="0.75" PointY="0.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,36 @@
+﻿@model List<QuizComputation.Model.CustomModel.QuizModel>
+
+@{
+    ViewBag.Title = "AdminDashboard";
+    Layout = "~/Views/Shared/_LayoutAdminPage.cshtml";
+}
+<div class="container-fluid mt-5">
+    <a class="btn btn-outline-primary" href="CreateQuiz">Create Quiz</a>
+</div>
+@if (Model != null)
+{
+
+<table class="table table-striped table-bordered table-hover mt-5 ">
+    <thead >
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*<a href="~/Admin/CreateQuestions?QuizId=@item.Quiz_id&description=@item.description&title=@item.title></a>
+                *@
+                <td>@item.Title</td>
+                <td>@item.Description</td>
+                <td>
+                    <a href="AddQuestionIntoQuiz?@item.Quiz_id" class="btn btn-outline-success" data-id="@item.Quiz_id">Add Question</a>
+                    <a href="@item.Quiz_id" class="btn btn-outline-warning">Edit</a>
+                    <a href="@item.Quiz_id" class="btn btn-outline-danger">Delete</a>
+                </td>
+            </tr>}
+    </tbody>
+</table>}
