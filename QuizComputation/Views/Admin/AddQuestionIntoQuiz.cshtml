@@ -13,38 +13,47 @@
 
             <form method="post" class="was-validated" id="addQuestion">
                 <div id="QuestionMainDiv">
-                    <div class="question">
-                        <textarea class="question-text form-control dynamic" name="question">Question</textarea>
-                        <div class="validation-message"></div>
-                        <div class="answers">
-                            <div class="answer-pair">
-                                <label style="white-space: nowrap; margin-top: 11px;">Option 1</label>
-                                <input type="text" name="options1" class="options form-control p-2 m-2 dynamic" />
-                                <span class="validation-message"><br></span>
-
-                                <label style="white-space: nowrap; margin-top: 11px;">Option 2</label>
-                                <input type="text" name="options2" class="options form-control p-2 m-2 dynamic" />
-                                <span class="validation-message"></span>
+                    <div class="question card w-50 mx-auto">
+                        <div class="card-body">
+                            <textarea class="question-text form-control dynamic" name="question">Question</textarea>
+                            <div class="validation-message"></div>
+                            <div class="answers">
+                                <div class="answer-pair row">
+                                    <div class="col-lg-6">
+                                        <label style="white-space: nowrap; margin-top: 11px;">Option 1</label>
+                                        <input type="text" name="options1" class="options form-control p-2 m-2 dynamic" />
+                                        <span class="validation-message"><br></span>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label style="white-space: nowrap; margin-top: 11px;">Option 2</label>
+                                        <input type="text" name="options2" class="options form-control p-2 m-2 dynamic" />
+                                        <span class="validation-message"></span>
+                                    </div>
+                                </div>
+                                <div class="answer-pair row">
+                                    <div class="col-lg-6">
+                                        <label style="white-space: nowrap; margin-top: 11px;">Option 3</label>
+                                        <input type="text" name="options3" class="options form-control p-2 m-2 dynamic" />
+                                        <span class="validation-message"></span>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label style="white-space: nowrap; margin-top: 11px;">Option 4</label>
+                                        <input type="text" name="options4" class="options form-control p-2 m-2 dynamic" />
+                                        <span class="validation-message"></span>
+                                    </div>
+                                </div>
+                                </div>
+                            <div class="add-answers">
+                                <label>Correct Answers</label>
+                                <select class="form-select AnswersClasss dynamic form-control" name="Answers">
+                                    <option value="Select Answers" selected>Select Answers</option>
+                                    <option>A</option>
+                                    <option>B</option>
+                                    <option>C</option>
+                                    <option>D</option>
+                                </select>
+                                <span class="validation-message"></span> <!-- Validation message for select option -->
                             </div>
-                            <div class="answer-pair">
-                                <label style="white-space: nowrap; margin-top: 11px;">Option 3</label>
-                                <input type="text" name="options3" class="options form-control p-2 m-2 dynamic" />
-                                <span class="validation-message"></span>
-                                <label style="white-space: nowrap; margin-top: 11px;">Option 4</label>
-                                <input type="text" name="options4" class="options form-control p-2 m-2 dynamic" />
-                                <span class="validation-message"></span>
-                            </div>
-                        </div>
-                        <div class="add-answers">
-                            <label>Correct Answers</label>
-                            <select class="form-select AnswersClasss dynamic" name="Answers">
-                                <option value="Select Answers" selected>Select Answers</option>
-                                <option>A</option>
-                                <option>B</option>
-                                <option>C</option>
-                                <option>D</option>
-                            </select>
-                            <span class="validation-message"></span> <!-- Validation message for select option -->
                         </div>
                     </div>
                 </div>
@@ -62,41 +71,49 @@
             if (validateQuestions() && validateOptions() && validateCorrectAnswers()) {
                 if (questionCount < 5) {
                     var div = `
-                        <div class="question">
-                        <textarea class="question-text form-control dynamic" name="question">Question</textarea>
-                        <div class="validation-message"></div>
-                        <div class="answers">
-                        <div class="answer-pair">
-                        <label style="white-space: nowrap; margin-top: 11px;">Option 1</label>
-                        <input type="text" name="options1" class="options form-control p-2 m-2 dynamic" />
-                        <span class="validation-message"></span>
-
-                                                            <label style="white-space: nowrap; margin-top: 11px;">Option 2</label>
-                        <input type="text" name="options2" class="options form-control p-2 m-2 dynamic" />
-                        <span class="validation-message"></span>
+                        <div class="question card w-50 mx-auto">
+                        <div class="card-body">
+                            <textarea class="question-text form-control dynamic" name="question">Question</textarea>
+                            <div class="validation-message"></div>
+                            <div class="answers">
+                                <div class="answer-pair row">
+                                    <div class="col-lg-6">
+                                        <label style="white-space: nowrap; margin-top: 11px;">Option 1</label>
+                                        <input type="text" name="options1" class="options form-control p-2 m-2 dynamic" />
+                                        <span class="validation-message"><br></span>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label style="white-space: nowrap; margin-top: 11px;">Option 2</label>
+                                        <input type="text" name="options2" class="options form-control p-2 m-2 dynamic" />
+                                        <span class="validation-message"></span>
+                                    </div>
+                                </div>
+                                <div class="answer-pair row">
+                                    <div class="col-lg-6">
+                                        <label style="white-space: nowrap; margin-top: 11px;">Option 3</label>
+                                        <input type="text" name="options3" class="options form-control p-2 m-2 dynamic" />
+                                        <span class="validation-message"></span>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label style="white-space: nowrap; margin-top: 11px;">Option 4</label>
+                                        <input type="text" name="options4" class="options form-control p-2 m-2 dynamic" />
+                                        <span class="validation-message"></span>
+                                    </div>
+                                </div>
+                                </div>
+                            <div class="add-answers">
+                                <label>Correct Answers</label>
+                                <select class="form-select AnswersClasss dynamic form-control" name="Answers">
+                                    <option value="Select Answers" selected>Select Answers</option>
+                                    <option>A</option>
+                                    <option>B</option>
+                                    <option>C</option>
+                                    <option>D</option>
+                                </select>
+                                <span class="validation-message"></span> <!-- Validation message for select option -->
+                            </div>
                         </div>
-                        <div class="answer-pair">
-                        <label style="white-space: nowrap; margin-top: 11px;">Option 3</label>
-                        <input type="text" name="options3" class="options form-control p-2 m-2 dynamic" />
-                        <span class="validation-message"></span>
-
-                                                            <label style="white-space: nowrap; margin-top: 11px;">Option 4</label>
-                        <input type="text" name="options4" class="options form-control p-2 m-2 dynamic" />
-                        <span class="validation-message"></span>
-                        </div>
-                        </div>
-                        <div class="add-answers">
-                        <label>Correct Answers</label>
-                        <select class="form-select AnswersClasss dynamic" name="Answers">
-                        <option value="Select Answers" selected>Select Answers</option>
-                        <option>A</option>
-                        <option>B</option>
-                        <option>C</option>
-                        <option>D</option>
-                        </select>
-                        <span class="validation-message"></span>
-                        </div>
-                        </div>`;
+                    </div>`;
                     $('#QuestionMainDiv').append(div);
                     questionCount++;
                 } else {
