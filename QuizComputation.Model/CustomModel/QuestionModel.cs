@@ -33,4 +33,6 @@ namespace QuizComputation.Model.CustomModel
         public string Answers { get; set; }
 
     }
+
+
 }

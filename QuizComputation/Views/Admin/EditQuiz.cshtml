@@ -1,0 +1,49 @@
+﻿@model QuizComputation.Model.CustomModel.CustomQuizModel
+@{ ViewBag.Title = "QuestionEdit";
+    Layout = "~/Views/Shared/_LayoutAdminPage.cshtml"; }
+
+<h2>QuestionEdit</h2>
+<div class="container mt-5 mb-2">
+
+    @foreach (var question in Model.Questions)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Question: @question.Question_txt
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @for (int i = 0; i < question.Options.Count; i += 2)
+                            {
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Option @(i + 1):</label>
+                                        <input type="text" class="form-control" value="@question.Options[i].Option_text" />
+
+                                    </div>
+                                    @if (i + 1 < question.Options.Count)
+                                    {
+                                <div class="form-group">
+                                    <label>Option @(i + 2):</label>
+                                    <input type="text" class="form-control" value="@question.Options[i + 1].Option_text" />
+                                </div>
+                                
+                                    }
+                        </div>
+            }
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg-12">
+                <label>Correct Answer:</label>
+                <select class="form-select" name="correct_answer_@question.Question_id">
+                    <option value="A" @(question.Options[0].Is_correct ? "selected" : "")>A</option>
+                    <option value="B" @(question.Options[1].Is_correct ? "selected" : "")>B</option>
+                    <option value="C" @(question.Options[2].Is_correct ? "selected" : "")>C</option>
+                    <option value="D" @(question.Options[3].Is_correct ? "selected" : "")>D</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+</div>}
+</div>

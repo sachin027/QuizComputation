@@ -87,7 +87,7 @@ namespace QuizComputation.Repository.Services
                 string Email = _userLogin.Email;
                 string password = HashPassword(_userLogin.Password_hash);
                 _userLogin.Password_hash = password;
-                string IsUserExist = "SP_LoginUser";
+                string IsUserExist = "Sp_AdminLogin";
                 Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
                         { "@Email", Email},

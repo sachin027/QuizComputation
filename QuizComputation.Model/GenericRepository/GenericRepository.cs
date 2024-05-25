@@ -312,5 +312,167 @@ namespace QuizComputation.Model.GenericRepository
                 }
             }
         }
+
+
+        public static AdminModel GetAdminProfile(string commandText, Dictionary<string, object> parameters)
+        {
+            AdminModel _adminModel = new AdminModel();
+            QuizComputation_452Entities _context = new QuizComputation_452Entities();
+            string connectionString = _context.Database.Connection.ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(commandText, connection))
+                {
+
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = 120;
+
+                    if (parameters != null)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                        }
+                    }
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                int adminID = DBHelper.ConvertStringToInt( reader["Admin_Id"].ToString());
+                                string adminName = reader["AdminName"].ToString();
+                                string adminEmail= reader["Admin_Email_Id"].ToString();
+                                string adminPassword = reader["Admin_password"].ToString();
+
+                                _adminModel.Admin_Id = adminID;
+                                _adminModel.AdminName = adminName;
+                                _adminModel.Admin_Email_Id = adminEmail;
+                                _adminModel.Admin_password = adminPassword;
+                            }
+                        }
+
+                    }
+
+                }
+            }
+            return _adminModel;
+        }
+
+        public static int UpdateAdminProfile(string commandText, Dictionary<string, object> parameters)
+        {
+            int IsRowAffected = 0;
+            QuizComputation_452Entities _context = new QuizComputation_452Entities();
+            string connectionString = _context.Database.Connection.ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(commandText, connection))
+                {
+
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = 120;
+
+                    if (parameters != null)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                        }
+                    }
+
+                    IsRowAffected = command.ExecuteNonQuery();
+
+                }
+            }
+            return IsRowAffected;
+        }
+
+        public static CustomQuizModel GetQuizWithQuestionsAndOptions(int quizId)
+        {
+            var quizModelList = new CustomQuizModel();
+            QuizComputation_452Entities _context = new QuizComputation_452Entities();
+            string connectionString = _context.Database.Connection.ConnectionString;
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Get Quiz
+                using (var cmd = new SqlCommand("GetQuizFromQuizId", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@QuizId", quizId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            quizModelList.Quiz_id = (int)reader["Quiz_id"];
+                            quizModelList.Title = reader["Title"].ToString();
+                            quizModelList.Description = reader["Description"].ToString();
+                        }
+                    }
+                }
+
+                // Get Questions
+                quizModelList.Questions = new List<CustomQuestionModel>();
+                using (var cmd = new SqlCommand("GetQuestionsByQuizId", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@QuizId", quizId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var question = new CustomQuestionModel
+                            {
+                                Question_id = (int)reader["question_id"],
+                                Quiz_id = (int)reader["quiz_id"],
+                                Question_txt = reader["question_text"].ToString(),
+                                Options = new List<CustomOptionModel>()
+                            };
+
+                            quizModelList.Questions.Add(question);
+                        }
+                    }
+                }
+
+                // Get Options
+                foreach (var question in quizModelList.Questions)
+                {
+                    using (var cmd = new SqlCommand("GetOptionsByQuestionId", connection))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@QuestionId", question.Question_id);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var option = new CustomOptionModel
+                                {
+                                    option_id = (int)reader["option_id"],
+                                    Question_id = (int)reader["Question_id"],
+                                    Option_text = reader["Option_text"].ToString(),
+                                    Is_correct = (bool)reader["Is_correct"]
+                                };
+
+                                question.Options.Add(option);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return quizModelList;
+        }
     }
 }

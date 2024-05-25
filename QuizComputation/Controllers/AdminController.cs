@@ -1,4 +1,5 @@
 ﻿using QuizComputation.Model.CustomModel;
+using QuizComputation.Model.GenericRepository;
 using QuizComputation.Repository.Services;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace QuizComputation.Controllers
     public class AdminController : Controller
     {
         QuizService _quizService = new QuizService();
+        AdminService _adminService = new AdminService();
         // GET: Admin
         public ActionResult AdminDashboard(QuizModel _quizModel)
         {
@@ -71,6 +73,7 @@ namespace QuizComputation.Controllers
                 throw ex;
             }
         }
+
         [HttpPost]
         public ActionResult AddQuestionIntoQuiz(List<OptionQuestionModel> _QustionAddingModel)
         {
@@ -85,6 +88,43 @@ namespace QuizComputation.Controllers
 
                 throw ex;
             }
+        }
+
+
+        public ActionResult AdminProfile(int id = 1)
+        {
+
+            AdminModel _admin = _adminService.GetAdminProfile(id);
+            return View(_admin);
+        }
+        [HttpPost]
+        public ActionResult AdminProfile(AdminModel adminModel)
+        {
+            if (ModelState.IsValid)
+            {
+                int isRowAffected = _adminService.UpdateAdminProfile(adminModel);
+                if(isRowAffected > 0)
+                {
+                    return View("AdminDashboard");
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        public ActionResult EditQuiz(int id)
+        {
+            return View();
+            ViewBag.created_by = SessionHelper.SessionHelper.user_id;
+            CustomQuizModel QuizzeModelList = GenericRepository.GetQuizWithQuestionsAndOptions(1);
+
+            return View(QuizzeModelList);
         }
 
     }

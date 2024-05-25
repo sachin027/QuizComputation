@@ -20,4 +20,27 @@ namespace QuizComputation.Model.CustomModel
         public Nullable<System.DateTime> Created_at { get; set; }
         public Nullable<System.DateTime> Updated_at { get; set; }
     }
+
+    public class CustomQuizModel
+    {
+        public int Quiz_id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public List<CustomQuestionModel> Questions { get; set; }
+
+    }
+    public class CustomQuestionModel
+    {
+        public int Question_id { get; set; }
+        public int Quiz_id { get; set; }
+        public string Question_txt { get; set; }
+        public List<CustomOptionModel> Options { get; set; }
+    }
+    public class CustomOptionModel
+    {
+        public int option_id { get; set; }
+        public int Question_id { get; set; }
+        public string Option_text { get; set; }
+        public bool Is_correct { get; set; }
+    }
 }
