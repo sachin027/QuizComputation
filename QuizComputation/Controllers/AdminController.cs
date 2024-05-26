@@ -81,7 +81,7 @@ namespace QuizComputation.Controllers
             {
                 ViewBag.created_by = SessionHelper.SessionHelper.user_id;
                 _quizService.AddQuestion(_QustionAddingModel);
-                return View();
+                return View("AdminDashboard");
             }
             catch (Exception ex)
             {
@@ -118,13 +118,25 @@ namespace QuizComputation.Controllers
             }
         }
 
-        public ActionResult EditQuiz(int id)
+        public ActionResult EditQuiz(int QuizID)
         {
-            return View();
             ViewBag.created_by = SessionHelper.SessionHelper.user_id;
-            CustomQuizModel QuizzeModelList = GenericRepository.GetQuizWithQuestionsAndOptions(1);
-
+            CustomQuizModel QuizzeModelList = GenericRepository.GetQuizWithQuestionsAndOptions(QuizID);
             return View(QuizzeModelList);
+        }
+
+        [HttpPost]
+        public ActionResult EditQuiz(CustomQuizModel customQuizModel)
+        {
+            try
+            {
+                GenericRepository.UpdateQuiz(customQuizModel);
+                return View();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }

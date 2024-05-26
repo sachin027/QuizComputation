@@ -434,9 +434,9 @@ namespace QuizComputation.Model.GenericRepository
                         {
                             var question = new CustomQuestionModel
                             {
-                                Question_id = (int)reader["question_id"],
-                                Quiz_id = (int)reader["quiz_id"],
-                                Question_txt = reader["question_text"].ToString(),
+                                Question_id = (int)reader["Question_id"],
+                                Quiz_id = (int)reader["Quiz_id"],
+                                Question_txt = reader["Question_txt"].ToString(),
                                 Options = new List<CustomOptionModel>()
                             };
 
@@ -474,5 +474,55 @@ namespace QuizComputation.Model.GenericRepository
 
             return quizModelList;
         }
+
+        public static void UpdateQuiz(CustomQuizModel quizModel)
+        {
+            QuizComputation_452Entities _context = new QuizComputation_452Entities();
+            string connectionString = _context.Database.Connection.ConnectionString; // Replace with your database connection string
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Update Quiz
+                using (SqlCommand command = new SqlCommand("UpdateQuiz", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@QuizId", quizModel.Quiz_id);
+                    command.Parameters.AddWithValue("@Title", quizModel.Title);
+                    command.Parameters.AddWithValue("@Description", quizModel.Description);
+
+                    command.ExecuteNonQuery();
+                }
+
+                // Update Questions and Options
+                foreach (var question in quizModel.Questions)
+                {
+                    using (SqlCommand command = new SqlCommand("UpdateQuestion", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@QuestionId", question.Question_id);
+                        command.Parameters.AddWithValue("@QuestionTxt", question.Question_txt);
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    foreach (var option in question.Options)
+                    {
+                        using (SqlCommand command = new SqlCommand("UpdateOption", connection))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@OptionId", option.option_id);
+                            command.Parameters.AddWithValue("@OptionText", option.Option_text);
+                            command.Parameters.AddWithValue("@IsCorrect", option.Is_correct);
+
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+        }
+
+
+
     }
 }
