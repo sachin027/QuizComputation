@@ -28,7 +28,7 @@
                 <td>@item.Description</td>
                 <td>
                     <a href="AddQuestionIntoQuiz?QuizID=@item.Quiz_id&description= @item.Description&title=@item.Title" class="btn btn-outline-success" data-id="@item.Quiz_id">Add Question</a>
-                    <a href="EditQuiz?QuizID=@item.Quiz_id" class="btn btn-outline-warning">Edit</a>
+                    <a href="EditQuiz?QuizID=@item.Quiz_id&description= @item.Description&title=@item.Title" class="btn btn-outline-warning">Edit</a>
                     <a href="@item.Quiz_id" class="btn btn-outline-danger">Delete</a>
                 </td>
             </tr>}

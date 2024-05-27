@@ -478,51 +478,254 @@ namespace QuizComputation.Model.GenericRepository
         public static void UpdateQuiz(CustomQuizModel quizModel)
         {
             QuizComputation_452Entities _context = new QuizComputation_452Entities();
-            string connectionString = _context.Database.Connection.ConnectionString; // Replace with your database connection string
+            string connectionString = _context.Database.Connection.ConnectionString; 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
                 // Update Quiz
-                using (SqlCommand command = new SqlCommand("UpdateQuiz", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@QuizId", quizModel.Quiz_id);
-                    command.Parameters.AddWithValue("@Title", quizModel.Title);
-                    command.Parameters.AddWithValue("@Description", quizModel.Description);
+                //using (SqlCommand command = new SqlCommand("UpdateQuiz", connection))
+                //{
+                //    command.CommandType = CommandType.StoredProcedure;
+                //    command.Parameters.AddWithValue("@QuizId", quizModel.Quiz_id);  
+                //    command.Parameters.AddWithValue("@Title", quizModel.Title);  
+                //    command.Parameters.AddWithValue("@Description", quizModel.Description);
 
-                    command.ExecuteNonQuery();
-                }
-
+                //    command.ExecuteNonQuery();
+                //}
+                
                 // Update Questions and Options
                 foreach (var question in quizModel.Questions)
                 {
-                    using (SqlCommand command = new SqlCommand("UpdateQuestion", connection))
+                    using (var cmd = new SqlCommand("UpdateQuestion", connection))
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@QuestionId", question.Question_id);
-                        command.Parameters.AddWithValue("@QuestionTxt", question.Question_txt);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@QuestionId", question.Question_id);
+                        cmd.Parameters.AddWithValue("@QuestionTxt", question.Question_txt);
 
-                        command.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
                     }
 
+                    // Update each Option for the current Question
                     foreach (var option in question.Options)
                     {
-                        using (SqlCommand command = new SqlCommand("UpdateOption", connection))
+                        using (var cmd = new SqlCommand("UpdateOption", connection))
                         {
-                            command.CommandType = CommandType.StoredProcedure;
-                            command.Parameters.AddWithValue("@OptionId", option.option_id);
-                            command.Parameters.AddWithValue("@OptionText", option.Option_text);
-                            command.Parameters.AddWithValue("@IsCorrect", option.Is_correct);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@questionId", option.Question_id);
+                            cmd.Parameters.AddWithValue("@OptionId", option.option_id);
+                            cmd.Parameters.AddWithValue("@OptionText", option.Option_text);
+                            cmd.Parameters.AddWithValue("@IsCorrect", option.Is_correct);
 
-                            command.ExecuteNonQuery();
+                            cmd.ExecuteNonQuery();
                         }
                     }
                 }
             }
         }
 
+        public static List<QuizModel> GetQuizListForUser(string commandText, Dictionary<string, object> parameters)
+        {
 
+            List<QuizModel> result = new List<QuizModel>();
+            using (QuizComputation_452Entities _context = new QuizComputation_452Entities())
+            {
+                string connectionString = _context.Database.Connection.ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = 120;
+
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                            }
+                        }
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            // Check if there are any rows returned
+                            if (reader.HasRows)
+                            {
+                                // Read each row
+                                while (reader.Read())
+                                {
+                                    QuizModel QuizzeModel = new QuizModel();
+
+                                    int quiz_id = DBHelper.ConvertStringToInt(reader["Quiz_id"].ToString());
+                                    string title = reader["Title"].ToString();
+                                    string description = reader["Description"].ToString();
+                                    QuizzeModel.Quiz_id = quiz_id;
+                                    QuizzeModel.Title = title;
+                                    QuizzeModel.Description = description;
+                                    result.Add(QuizzeModel);
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public static string GetQuestionByQuizId(string commandText, Dictionary<string, object> parameters)
+        {
+
+            string question_text = "";
+            using (QuizComputation_452Entities _context = new QuizComputation_452Entities())
+            {
+                string connectionString = _context.Database.Connection.ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = 120;
+
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                            }
+                        }
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            // Check if there are any rows returned
+                            if (reader.HasRows)
+                            {
+                                // Read each row
+                                while (reader.Read())
+                                {
+                                    QuestionModel QuestionModel = new QuestionModel();
+
+                                    int QuizID = DBHelper.ConvertStringToInt(reader["Quiz_id"].ToString());
+                                    int QuestionID = DBHelper.ConvertStringToInt(reader["Question_id"].ToString());
+                                    question_text = reader["Question_txt"].ToString();
+                                    QuestionModel.Quiz_id = QuizID;
+                                    QuestionModel.Question_id = QuestionID;
+                                    QuestionModel.Question_txt = question_text;
+                                    
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            return question_text;
+        }        
+        
+        public static int GetQuestionId(string commandText, Dictionary<string, object> parameters)
+        {
+
+            int questionID = 0;
+            using (QuizComputation_452Entities _context = new QuizComputation_452Entities())
+            {
+                string connectionString = _context.Database.Connection.ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = 120;
+
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                            }
+                        }
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            // Check if there are any rows returned
+                            if (reader.HasRows)
+                            {
+                                // Read each row
+                                while (reader.Read())
+                                {
+                                    QuestionModel QuestionModel = new QuestionModel();
+
+                                    questionID = DBHelper.ConvertStringToInt(reader["Question_id"].ToString());
+                                    
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            return questionID;
+        }
+
+        public static List<OptionModel> GetOptionByQuestionId(string commandText, Dictionary<string, object> parameters)
+        {
+
+            List<OptionModel> result = new List<OptionModel>();
+            using (QuizComputation_452Entities _context = new QuizComputation_452Entities())
+            {
+                string connectionString = _context.Database.Connection.ConnectionString;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = 120;
+
+                        if (parameters != null)
+                        {
+                            foreach (var parameter in parameters)
+                            {
+                                command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                            }
+                        }
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            // Check if there are any rows returned
+                            if (reader.HasRows)
+                            {
+                                // Read each row
+                                while (reader.Read())
+                                {
+                                    OptionModel OptionModel = new OptionModel();
+
+                                    int question_id = DBHelper.ConvertStringToInt(reader["Question_id"].ToString());
+                                    int option_id = DBHelper.ConvertStringToInt(reader["Option_id"].ToString());
+                                    string option_text = reader["Option_text"].ToString();
+                                    OptionModel.Question_id = question_id;
+                                    OptionModel.Option_id = option_id;
+                                    OptionModel.Option_text = option_text;
+                                    result.Add(OptionModel);
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            return result;
+        }
 
     }
 }

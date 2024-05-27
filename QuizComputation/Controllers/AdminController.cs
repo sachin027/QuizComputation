@@ -126,12 +126,12 @@ namespace QuizComputation.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditQuiz(CustomQuizModel customQuizModel)
+        public ActionResult EditQuiz(CustomQuizModel customQuizModel)  //model object coming null 
         {
             try
             {
                 GenericRepository.UpdateQuiz(customQuizModel);
-                return View();
+                return Json(new { redirectUrl = Url.Action("AdminDashboard") });
             }
             catch (Exception ex)
             {

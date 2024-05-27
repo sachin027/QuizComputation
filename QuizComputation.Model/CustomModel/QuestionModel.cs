@@ -10,12 +10,15 @@ namespace QuizComputation.Model.CustomModel
     public class QuestionModel
     {
         public int Question_id { get; set; }
-        public Nullable<int> Quiz_id { get; set; }
-
+        public int Quiz_id { get; set; }
         public string Question_txt { get; set; }
-
-        public Nullable<System.DateTime> Created_at { get; set; }
-        public Nullable<System.DateTime> Updated_at { get; set; }
+    }    
+    public class OptionModel
+    {
+        public int Option_id { get; set; }
+        public int Question_id { get; set; }
+        public string Option_text { get; set; }
+        public bool Is_correct { get; set; }
     }
     public class OptionQuestionModel
     {

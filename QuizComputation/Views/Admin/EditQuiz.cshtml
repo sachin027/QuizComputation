@@ -2,15 +2,20 @@
 @{ ViewBag.Title = "QuestionEdit";
     Layout = "~/Views/Shared/_LayoutAdminPage.cshtml"; }
 
-<h2>QuestionEdit</h2>
 <div class="container mt-5 mb-2">
-    <form method="post" id="editQuizForm">
+
+    <form method="post">
+        @Html.HiddenFor(model => model.Quiz_id) <!-- Hidden input for Quiz ID -->
+        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control mb-4" } }) <!-- Input field for Description -->
+        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control mb-4", @readonly = "readonly" } })
+
         @foreach (var question in Model.Questions)
         {
     <div class="card mb-4">
         <div class="card-header">
-            @*Question: @question.Question_txt*@
-            <input type="text" class="form-control" value="@question.Question_txt " />
+            <!--Question: question.question_text-->
+            <input type="text" name="@question.Question_txt" id="@question.Question_id" value="@question.Question_txt" class="dynamic form-control" />
+
         </div>
         <div class="card-body">
             <div class="row">
@@ -19,63 +24,90 @@
     <div class="col-lg-6">
         <div class="form-group">
             <label>Option @(i + 1):</label>
-            <input type="text" class="form-control" value="@question.Options[i].Option_text" />
-
+            <input type="text" name="@question.Options[i].Option_text" id="@question.Options[i].option_id" class="form-control dynamic" value="@question.Options[i].Option_text" />
         </div>
         @if (i + 1 < question.Options.Count)
         {
     <div class="form-group">
         <label>Option @(i + 2):</label>
-        <input type="text" class="form-control" value="@question.Options[i + 1].Option_text" />
-    </div>                    }
+        <input type="text" name="@question.Options[i+1].Option_text" id="@question.Options[i + 1].option_id" class="form-control dynamic" value="@question.Options[i + 1].Option_text" />
+    </div>}
     </div>}
             </div>
             <div class="row mt-2">
                 <div class="col-lg-12">
                     <label>Correct Answer:</label>
-                    <select class="form-select" name="correct_answer_@question.Question_id">
-                        <option value="A" @(question.Options[0].Is_correct ? "selected" : "")>A</option>
-                        <option value="B" @(question.Options[1].Is_correct ? "selected" : "")>B</option>
-                        <option value="C" @(question.Options[2].Is_correct ? "selected" : "")>C</option>
-                        <option value="D" @(question.Options[3].Is_correct ? "selected" : "")>D</option>
+                    <select class="form-select dynamic" name="correct_answers[@question.Question_id]" id="CorrectAnswers">
+                        <option value="@question.Options[0].Option_text" @(question.Options[0].Is_correct ? "selected" : "")>A</option>
+                        <option value="@question.Options[1].Option_text" @(question.Options[1].Is_correct ? "selected" : "")>B</option>
+                        <option value="@question.Options[2].Option_text" @(question.Options[2].Is_correct ? "selected" : "")> C</option>
+                        <option value="@question.Options[3].Option_text" @(question.Options[3].Is_correct ? "selected" : "")>D</option>
                     </select>
                 </div>
             </div>
-
         </div>
     </div>}
-        <div class="row mb-4">
-            <div class="col-lg-12 d-flex justify-content-end">
-                <input type="submit" name="submit" id="submit" value="Save" class="btn btn-outline-success mt-3 mb-4" />
-            </div>
-        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
-
-
 <script>
-    $(document).ready(function () {
-        $('#editQuizForm').submit(function (e) {
-            e.preventDefault(); // Prevent the default form submission
 
-            // Serialize form data
-            var formData = $(this).serialize();
+$(document).ready(function () {
+    $('form').submit(function (event) {
+        event.preventDefault();
 
-            // Send AJAX POST request
-            $.ajax({
-                url: '@Url.Action("EditQuiz", "Admin")', // Replace with your controller action URL
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    // Handle success response
-                    console.log(response);
-                    // Optionally, you can redirect the user or show a success message
-                },
-                error: function (xhr, status, error) {
-                    // Handle error
-                    console.error(xhr.responseText);
+        var CustomQuizModel = {};
+
+        CustomQuizModel.quiz_id = @Model.Quiz_id;
+        CustomQuizModel.title = "@Model.Title";
+        CustomQuizModel.description = "@Model.Description";
+        CustomQuizModel.Questions = [];
+
+        // Loop through each question
+        $('.card').each(function () {
+            var question = {};
+
+            question.question_id = $(this).find('input[type="text"]').attr('id');
+            question.quiz_id = @Model.Quiz_id;
+            question.Question_txt = $(this).find('input[type="text"]').val();
+            question.Options = [];
+
+            // Loop through each option for the current question
+            $(this).find('.form-group').each(function () {
+                var Options = {};
+
+                Options.option_id = $(this).find('input[type="text"]').attr('id');
+                Options.Question_id = question.question_id;
+                Options.Option_text = $(this).find('input[type="text"]').val();
+
+                var selectedValue = $(this).closest('.card-body').find('select').val();
+
+                if (Options.Option_text == selectedValue) {
+                    Options.is_correct = true;
                 }
+                else {
+                    Options.is_correct = false;
+                }
+
+                question.Options.push(Options);
             });
+
+            CustomQuizModel.Questions.push(question);
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "/Admin/EditQuiz",
+            contentType: "application/json",
+            data: JSON.stringify(CustomQuizModel),
+            success: function (response) {
+                window.location.href = response.redirectUrl;
+            },
+            error: function (error) {
+                console.error(error);
+            }
         });
     });
+});
 </script>
+

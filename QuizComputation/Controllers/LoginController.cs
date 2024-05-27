@@ -25,14 +25,14 @@ namespace QuizComputation.Controllers
                 UserModel _user = _loginService.UserLogin(_UserLogin);
                 AdminModel _admin = _loginService.AdminLogin(_UserLogin);
 
-                if (_user.User_id > 0 && _user!=null && _admin == null)
+                if (_user.User_id > 0 && _user.Email!=null && _admin.Admin_Email_Id == null)
                 {
                     SessionHelper.SessionHelper.user_id = _user.User_id;
                     SessionHelper.SessionHelper.username = _user.Username;
                     SessionHelper.SessionHelper.email = _user.Email;
 
                     TempData["success"] = "Login Successfully";
-                    return RedirectToAction("Index","User");
+                    return RedirectToAction("UserDashboard","User");
                 }
                 if (_admin.Admin_Id > 0 && _admin != null)
                 {

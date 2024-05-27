@@ -1,0 +1,54 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutUserPage.cshtml";
+}
+
+<div class="confirmation-page container-fluid  mt-5">
+    <div class=" d-block info-card">
+        <div class="card w-50">
+            <h1>Quiz Confirmation</h1>
+            <p>This quiz has the following details:</p>
+            <ul>
+                <li>Total number of questions: 5</li>
+                <li>All questions are mandatory</li>
+                <li>Number of options per question: 4</li>
+                <li>You cannot go back once you have answered a question</li>
+            </ul>
+            <a class="btn btn-outline-primary" id="start-quiz" onclick="startQuiz()">Start Quiz</a>
+        </div>
+    </div>
+
+    <div class="card quiz-card d-none">
+        <div id="QuestionContainer" class="container-fluid">
+
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    function startQuiz() {
+        console.log("hello");
+        $(".info-card").addClass("d-none");
+            $(".info-card").removeClass("d-block");
+
+        $(".quiz-card").removeClass("d-none");
+        $(".quiz-card").addClass("d-block");
+
+
+            id = @ViewBag.quizID
+                $.ajax({
+                url: "/User/StartQuiz?id=" + id,
+                dataType : "html",
+                    success: function (result) {
+                      console.log(result);
+                    $("#QuestionContainer").html(result)
+                }
+            })
+    }
+</script>
+
+
+
+

@@ -1,0 +1,29 @@
+﻿@model List<QuizComputation.Model.CustomModel.QuizModel>
+@{
+    Layout = "~/Views/Shared/_LayoutUserPage.cshtml";
+}
+
+<div class="container-fluid mt-5 w-75">
+    <table class="table table-bordered">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th scope="col">Quiz Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Start</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Description</td>
+                    <td>
+                        <a href="ShowInformationPage?QuizID=@item.Quiz_id" class="btn btn-success" data-id="@item.Quiz_id">Attempt</a>
+                      @*  @Html.ActionLink("Attempt", "ShowInformationPage","User",new {id=@item.Quiz_id  })*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
