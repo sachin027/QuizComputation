@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "QuizResult";
+    Layout = "~/Views/Shared/_LayoutUserPage.cshtml";
+}
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card rounded shadow-lg"  style="width: 30rem;">
+        <img src="~/Content/Theme/AdminUser/img/pexels-goumbik-669619.jpg"
+             class="card-img-top"
+             alt="img"
+             style="max-height: 300px;">
+        <div class="card-body">
+            <p class="card-text text-center font-weight-bold">Total Marks: @ViewBag.QuizTotalMarks</p>
+            @if (ViewBag.QuizTotalMarks > 20)
+            {
+                <p class="text-success text-center font-weight-bold">Congratulations! You passed the exam.</p>
+            }
+            else
+            {
+                <p class="text-danger text-center font-weight-bold">Sorry! You couldn't clear the exam.</p>
+            }
+        </div>
+    </div>
+</div>
+
+

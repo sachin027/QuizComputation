@@ -37,7 +37,7 @@
             <div class="row mt-2">
                 <div class="col-lg-12">
                     <label>Correct Answer:</label>
-                    <select class="form-select dynamic" name="correct_answers[@question.Question_id]" id="CorrectAnswers">
+                    <select class="form-select form-control dynamic" name="correct_answers[@question.Question_id]" id="CorrectAnswers">
                         <option value="@question.Options[0].Option_text" @(question.Options[0].Is_correct ? "selected" : "")>A</option>
                         <option value="@question.Options[1].Option_text" @(question.Options[1].Is_correct ? "selected" : "")>B</option>
                         <option value="@question.Options[2].Option_text" @(question.Options[2].Is_correct ? "selected" : "")> C</option>

@@ -124,7 +124,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="CustomFilter\CustomAdminAuthorizeAttribute.cs" />
     <Compile Include="CustomFilter\CustomAuthorizeAttribute.cs" />
+    <Compile Include="CustomFilter\CustomUserAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -134,6 +136,7 @@
   <ItemGroup>
     <Content Include="Content\Theme\AdminUser\css\sb-admin-2.css" />
     <Content Include="Content\Theme\AdminUser\css\sb-admin-2.min.css" />
+    <Content Include="Content\Theme\AdminUser\img\pexels-goumbik-669619.jpg" />
     <Content Include="Content\Theme\AdminUser\img\undraw_posting_photo.svg" />
     <Content Include="Content\Theme\AdminUser\img\undraw_profile.svg" />
     <Content Include="Content\Theme\AdminUser\img\undraw_profile_1.svg" />
@@ -2146,6 +2149,10 @@
     <Content Include="Views\User\UserDashboard.cshtml" />
     <Content Include="Views\User\ShowInformationPage.cshtml" />
     <Content Include="Views\User\_PartialQuestion.cshtml" />
+    <Content Include="Views\User\QuizQuestionForUser.cshtml" />
+    <Content Include="Views\User\StartQuiz.cshtml" />
+    <Content Include="Views\User\QuizResult.cshtml" />
+    <Content Include="Views\User\UserProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

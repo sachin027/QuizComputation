@@ -1,4 +1,5 @@
-﻿using QuizComputation.Model.CustomModel;
+﻿using QuizComputation.CustomFilter;
+using QuizComputation.Model.CustomModel;
 using QuizComputation.Model.GenericRepository;
 using QuizComputation.Repository.Services;
 using System;
@@ -9,22 +10,52 @@ using System.Web.Mvc;
 
 namespace QuizComputation.Controllers
 {
+    [CustomAuthorize]
+    [CustomUserAuthorize]
     public class UserController : Controller
     {
         UserService _userService = new UserService();
         // GET: User
         public ActionResult UserDashboard(QuizModel quizModel) 
         {
+            ViewBag.UserId = SessionHelper.SessionHelper.user_id;
+            ViewBag.userName = SessionHelper.SessionHelper.username;
             List<QuizModel> _quizList = _userService.GetQuizListForUser(quizModel);
             return View(_quizList);
         }
 
+        public ActionResult UserProfile(int UserID)
+        {
+            //UserID = SessionHelper.SessionHelper.user_id;
+
+            UserModel _userModel = _userService.GetUserProfile(UserID);
+            return View(_userModel);
+        }
+
+        [HttpPost]
+        public ActionResult UserProfile(UserModel _UserModel)
+        {
+                int isRowAffected = _userService.UpdateUserProfile(_UserModel);
+                if (isRowAffected > 0)
+                {
+                    return View("UserDashboard");
+                }
+                else
+                {
+                    return View();
+                }
+
+        }
         public ActionResult ShowInformationPage(int QuizID)
         {
             try
             {
-                ViewBag.quizID = QuizID;
-                return View();
+                ViewBag.QuizID = QuizID;
+                QuizModel quizModel = new QuizModel();
+                int Userid = SessionHelper.SessionHelper.user_id;
+                ViewBag.UserId = Userid;
+                ViewBag.QuestionId = _userService.GetQuestionId(QuizID);
+                return View(quizModel);
             }
             catch (Exception ex)
             {
@@ -32,14 +63,35 @@ namespace QuizComputation.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult StartQuiz(int id)
+        public ActionResult QuizQuestionForUser(int QuestionId)
         {
-            ViewBag.QuestionId = _userService.GetQuestionId(id);
-            int questionID = ViewBag.QuestionId;
-            ViewBag.Questions = _userService.GetQuestionByQuizID(id);
-            List<OptionModel> optionList = _userService.GetOptionByQuestionId(questionID);
-            return PartialView("_PartialQuestion", optionList);
+            
+            ViewBag.Questions = _userService.GetQuestionByQuestionID(QuestionId);
+            List<OptionModel> OptionModel = _userService.GetOptionByQuestionId(QuestionId);
+            return PartialView("QuizQuestionForUser", OptionModel);
+        }
+
+        public JsonResult AddUserAnswers(UserAnswerModel _UserAnswer)
+        {
+            int isAnswers = _userService.SaveUserAnswer(_UserAnswer);
+            return Json(isAnswers, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult QuizResult(int QuizID , int UserId)
+        {
+            ViewBag.UserID = SessionHelper.SessionHelper.user_id;
+            ViewBag.QuizId = QuizID; 
+            int QuizTotalMarks = _userService.UserQuizResult(QuizID , UserId);
+            ViewBag.QuizTotalMarks = QuizTotalMarks;
+            return View();
+        }
+
+        public ActionResult Logout()
+        {
+            Session.Clear();
+            TempData["success"] = "Logout successfully ";
+            return RedirectToAction("Login", "Login");
         }
     }
 }

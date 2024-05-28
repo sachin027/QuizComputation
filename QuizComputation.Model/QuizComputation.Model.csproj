@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomModel\UserAnswerModel.cs" />
     <Compile Include="CustomModel\LoginModel.cs" />
     <Compile Include="CustomModel\QuestionModel.cs" />
     <Compile Include="CustomModel\QuizModel.cs" />

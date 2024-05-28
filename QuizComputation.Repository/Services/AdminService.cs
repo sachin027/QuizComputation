@@ -72,7 +72,6 @@ namespace QuizComputation.Repository.Services
             }
         }
 
-
         private string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())

@@ -22,18 +22,22 @@ namespace QuizComputation.Model.CustomModel
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password should not be empty.")]
+        [StringLength(8, MinimumLength = 6, ErrorMessage = "Password length must be between 6 and 8 characters.")]
         public string Password_hash { get; set; }
 
         [Required(ErrorMessage = "Confirm Password Required.")]
         [Compare("Password_hash", ErrorMessage = "Password is not identical")]
         public string ConfirmPassword { get; set; }
-
+        public string Role = "User";
         public Nullable<System.DateTime> Created_at { get; set; }
         public Nullable<System.DateTime> Updated_at { get; set; }
     }
 
     public class AdminModel
     {
+
+
+        public string Role = "Admin";
         public int Admin_Id { get; set; }
 
         [Required(ErrorMessage ="Name must be required")]

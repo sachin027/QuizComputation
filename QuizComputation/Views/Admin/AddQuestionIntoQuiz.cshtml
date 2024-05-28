@@ -20,6 +20,9 @@
                 <input type="text" value="@ViewBag.title" readonly class="form-control" id="titles" />
             </div>
         </div>
+        <span>
+            <h6 id="QuestionValidationMessage"></h6>
+        </span>
         <div class="row mb-4">
             <div class="col-lg-12 d-flex justify-content-end">
                 <input type="button" name="AddQuestion" id="AddQuestion" value="Add" class="btn btn-outline-danger mb-4" />
@@ -76,7 +79,7 @@
         </div>
         <div class="row mb-4">
             <div class="col-lg-12 d-flex justify-content-end">
-                <input type="button" name="submit" id="submit" value="Submit" class="btn btn-outline-success mt-3 mb-4" />
+                <input type="button" name="submit" id="submit" value="Submit" class="btn btn-outline-success mt-3 mb-4 " />
             </div>
         </div>
     </form>
@@ -194,35 +197,39 @@
         }
 
         $('#submit').on('click', function () {
-            UserData = []; // Clear previous data
-            var dynamicObjects = document.querySelectorAll('.dynamic');
-            for (var i = 0; i < dynamicObjects.length; i += 6) {
-                var DynamicArrayObject = {}
+            if (questionCount > 5) {
+                UserData = []; // Clear previous data
+                var dynamicObjects = document.querySelectorAll('.dynamic');
+                for (var i = 0; i < dynamicObjects.length; i += 6) {
+                    var DynamicArrayObject = {}
 
-                for (var j = 0; j < 6; j++) {
-                    if (j == 0) {
-                        var quizId = document.getElementById('QuizId').value;
-                        DynamicArrayObject["quizId"] = quizId
+                    for (var j = 0; j < 6; j++) {
+                        if (j == 0) {
+                            var quizId = document.getElementById('QuizId').value;
+                            DynamicArrayObject["quizId"] = quizId
+                        }
+                        var element = dynamicObjects[i + j];
+                        var name = element.name;
+                        var value = element.value;
+                        DynamicArrayObject[name] = value;
                     }
-                    var element = dynamicObjects[i + j];
-                    var name = element.name;
-                    var value = element.value;
-                    DynamicArrayObject[name] = value;
-                }
 
-                UserData.push(DynamicArrayObject);
+                    UserData.push(DynamicArrayObject);
+                }
+                console.log(UserData);
+                $.ajax({
+                    url: '/Admin/AddQuestionIntoQuiz',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(UserData),
+                    success: function (data) {
+                        console.log(data);
+                    }
+
+                })
+            } else {
+                $('#QuestionValidationMessage').text("Please Add Five Question*").addClass('text-danger');
             }
-            console.log(UserData);
-            $.ajax({
-                url: '/Admin/AddQuestionIntoQuiz',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(UserData),
-                success: function (data) {
-                    console.log(data);
-                }
-
-            })
         });
     });
 </script>

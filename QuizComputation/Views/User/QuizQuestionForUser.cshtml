@@ -1,0 +1,31 @@
+﻿@model List<QuizComputation.Model.CustomModel.OptionModel>
+
+<div class="row">
+    <div class="col-12 ">
+        <ul class="list-group list-group-flush mt-4">
+            <li class="list-group-item border"> @ViewBag.Questions</li>
+        </ul>
+        <span><h6 id="OptionValidationMessage"></h6></span>
+        @*<p class="card-text">@ViewBag.Questions</p>*@
+    </div>
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="option-border" onclick="document.getElementById('option_@item.Option_id').checked = true;">
+                <div class="form-check d-flex align-items-center">
+                    <div class="card" style="width: 50rem;">
+                        <ul class="list-group ">
+                            <li class="list-group-item ">
+                                <input class="form-check-input " type="radio" id="option_@item.Option_id" name="options" value="@item.Option_id">
+                                <label class="form-check-label mb-0" for="option_@item.Option_id">
+                                    @item.Option_text
+                                </label>
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

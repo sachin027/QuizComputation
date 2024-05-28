@@ -30,6 +30,7 @@ namespace QuizComputation.Controllers
                     SessionHelper.SessionHelper.user_id = _user.User_id;
                     SessionHelper.SessionHelper.username = _user.Username;
                     SessionHelper.SessionHelper.email = _user.Email;
+                    SessionHelper.SessionHelper.Role = _user.Role;
 
                     TempData["success"] = "Login Successfully";
                     return RedirectToAction("UserDashboard","User");
@@ -39,6 +40,7 @@ namespace QuizComputation.Controllers
                     SessionHelper.SessionHelper.user_id = _admin.Admin_Id;
                     SessionHelper.SessionHelper.username = _admin.AdminName;
                     SessionHelper.SessionHelper.email = _admin.Admin_Email_Id;
+                    SessionHelper.SessionHelper.Role = _admin.Role;
 
                     ViewBag.CreatedByValue = SessionHelper.SessionHelper.user_id;
 
@@ -63,6 +65,7 @@ namespace QuizComputation.Controllers
         {
             return View("Signup");
         }
+
         [HttpPost]
         public ActionResult Signup(UserModel _UserModel)
         {

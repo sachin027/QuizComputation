@@ -41,5 +41,16 @@ namespace QuizComputation.SessionHelper
                 HttpContext.Current.Session["email"] = value;
             }
         }
+        public static string Role
+        {
+            set
+            {
+                HttpContext.Current.Session["Role"] = value;
+            }
+            get
+            {
+                return HttpContext.Current.Session["Role"] == null ? "" : (string)HttpContext.Current.Session["Role"];
+            }
+        }
     }
 }

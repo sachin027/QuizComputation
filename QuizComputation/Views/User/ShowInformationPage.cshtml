@@ -1,54 +1,148 @@
-﻿
+﻿@model QuizComputation.Model.CustomModel.QuizModel
 @{
     Layout = "~/Views/Shared/_LayoutUserPage.cshtml";
 }
 
-<div class="confirmation-page container-fluid  mt-5">
-    <div class=" d-block info-card">
-        <div class="card w-50">
-            <h1>Quiz Confirmation</h1>
-            <p>This quiz has the following details:</p>
-            <ul>
-                <li>Total number of questions: 5</li>
-                <li>All questions are mandatory</li>
-                <li>Number of options per question: 4</li>
-                <li>You cannot go back once you have answered a question</li>
-            </ul>
-            <a class="btn btn-outline-primary" id="start-quiz" onclick="startQuiz()">Start Quiz</a>
+<input type="hidden" name="quiz_id" id="quiz_id" value="@(ViewBag.QuizID )" class="form-control" hidden />
+<input type="text" name="FirstQuestionId" id="FirstQuestionId" value="@ViewBag.QuestionId" hidden />
+<input type="text" name="UserId" id="UserId" value="@(ViewBag.UserId)" hidden />
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card rounded shadow-lg info-card">
+                <div class="card-body">
+                    <h1 class="text-center mb-4">Quiz Details</h1>
+                    <p>This quiz has the following details:</p>
+                    <ul>
+                        <li>Total number of questions: 5</li>
+                        <li>All questions are mandatory</li>
+                        <li>Number of options per question: 4</li>
+                        <li>You cannot go back once you have answered a question</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                        <a class="btn btn-outline-primary" id="start-quiz" onclick="startQuiz()">Start Quiz</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card quiz-card rounded shadow-lg d-none">
+                <div id="QuestionContainer" class="container-fluid">
+
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 d-flex justify-content-center">
+                        <a href="QuizResult?UserId=@ViewBag.UserID&QuizID=@ViewBag.QuizID " class="btn btn-outline-danger mx-auto" id="Result">View Result</a>
+                        <input type="button" name="Next" id="Next" value="Next" onclick="NextQuestion()" class="btn btn-outline-danger mt-5 my-4">
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
     </div>
-
-    <div class="card quiz-card d-none">
-        <div id="QuestionContainer" class="container-fluid">
-
-        </div>
-    </div>
-
-
 </div>
 
 <script>
+    $(document).ready(function () {
+
+        //$('#Next').hide();
+        //$('#Previous').hide();
+        $('#Result').hide();
+    });
+
+    function NextQuestion() {
+            var currentQuestionId = $('#FirstQuestionId').val();
+            var LastQuestionId = @ViewBag.QuestionId+4;
+            var nextQuestionId = parseInt(currentQuestionId) + 1;
+            var userId = $('#UserId').val();
+            var QuizId = $('#quiz_id').val();
+            
+        //var selectedValue = document.querySelector('input[name="options"]:checked').value;
+        var selectedOption = document.querySelector('input[name="options"]:checked');
+        if (!selectedOption) {
+            $('#OptionValidationMessage').text("Please select an option.").addClass('text-danger');
+            return; // Exit the function if no option is selected
+        }
+        var selectedValue = selectedOption.value;
+
+                if (LastQuestionId == parseInt(currentQuestionId) + 1) {
+                    $('#Next').val('Submit');
+                }
+                var answerData = {
+                    question_id: currentQuestionId,
+                    selected_option_id: selectedValue,
+                    user_id: userId,
+                    quiz_id: QuizId
+                }
+
+                $.ajax({
+                    url: '/User/AddUserAnswers',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(answerData),
+                    success: function (response) {
+                        console.log(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+
+                });
+
+
+                $.ajax({
+                    url: '/User/QuizQuestionForUser?QuestionId=' + nextQuestionId,
+                        type: 'GET',
+                        success: function (data) {
+                            $('#QuestionForUser').empty();
+                            $('#QuestionContainer').html(data);
+                            $('#FirstQuestionId').val(nextQuestionId);
+                        }
+
+                });
+
+                if (LastQuestionId <= currentQuestionId)
+                {
+                    $('#QuestionForUser').hide();
+                    $('#Next').hide();
+                    //$('#Previous').hide();
+                    $('#Result').show();
+                }
+    }
+
+    //function PreviousQuestion() {
+    //        var currentQuestionId = $('#FirstQuestionId').val();
+    //        var previousQuestionId = parseInt(currentQuestionId) - 1;
+
+    //        if (previousQuestionId > 0) {
+    //            $.ajax({
+    //                url: '/User/StartQuiz?id=' + previousQuestionId,
+    //                type: 'GET',
+    //                success: function (data) {
+    //                    $('#QuestionForUser').empty();
+    //                    $('#QuestionForUser').append(data);
+    //                    $('#FirstQuestionId').val(previousQuestionId); // Update the hidden field with the new question ID
+    //                }
+    //            });
+    //        }
+    //    };
+
     function startQuiz() {
-        console.log("hello");
-        $(".info-card").addClass("d-none");
+            console.log("hello");
+            $(".info-card").addClass("d-none");
             $(".info-card").removeClass("d-block");
 
-        $(".quiz-card").removeClass("d-none");
-        $(".quiz-card").addClass("d-block");
+            $(".quiz-card").removeClass("d-none");
+            $(".quiz-card").addClass("d-block");
 
 
-            id = @ViewBag.quizID
-                $.ajax({
-                url: "/User/StartQuiz?id=" + id,
-                dataType : "html",
-                    success: function (result) {
-                      console.log(result);
+        id = @ViewBag.QuestionId
+            $.ajax({
+                url: "/User/QuizQuestionForUser?QuestionId=" + id,
+                dataType: "html",
+                success: function (result) {
+                    console.log(result);
                     $("#QuestionContainer").html(result)
                 }
-            })
+            });
     }
 </script>
-
-
-
-

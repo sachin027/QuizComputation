@@ -8,9 +8,11 @@ namespace QuizComputation.Model.GenericRepository
 {
     public class GenericRepository
     {
+        /// <summary>
+        /// Check Sign Up details Correct and signup .
+        /// </summary>
         public static bool IsSignUpValid(string commandText, Dictionary<string, object> parameters)
         {
-            DataTable dataTable = new DataTable();
             bool isSignUpValid = false;
             using (QuizComputation_452Entities _context = new QuizComputation_452Entities())
             {
@@ -44,6 +46,10 @@ namespace QuizComputation.Model.GenericRepository
 
             return isSignUpValid;
         }
+
+        /// <summary>
+        /// Check Email already exist .
+        /// </summary>
 
         public static bool IsEmailExist(string commandText, Dictionary<string, object> parameters)
         {
@@ -80,6 +86,9 @@ namespace QuizComputation.Model.GenericRepository
 
             return newRecord;
         }
+        /// <summary>
+        /// Check User Details and already exist or not . 
+        /// </summary>
 
         public static UserModel IsUserExist(string commandText, Dictionary<string, object> parameters)
         {
@@ -137,6 +146,9 @@ namespace QuizComputation.Model.GenericRepository
             return _userModel;
         }
 
+        /// <summary>
+        /// Check Admin Details and already exist or not . 
+        /// </summary>
         public static AdminModel IsAdminExist(string commandText, Dictionary<string, object> parameters)
         {
             AdminModel _adminModel = new AdminModel();
@@ -193,6 +205,9 @@ namespace QuizComputation.Model.GenericRepository
             return _adminModel;
         }
 
+        /// <summary>
+        /// Create New Quiz 
+        /// </summary>
         public static QuizModel GenerateQuiz(string commandText , Dictionary<string, object> parameters)
         {
             QuizModel _quizModel = new QuizModel();
@@ -239,6 +254,10 @@ namespace QuizComputation.Model.GenericRepository
             return _quizModel;
         }
 
+        /// <summary>
+        /// Get QuizList
+        /// </summary>
+        /// <returns>Created All quiz List</returns>
         public static List<QuizModel> GetQuizList(string commandText, Dictionary<string, object> parameters)
         {
             List<QuizModel> quizList = new List<QuizModel>();
@@ -283,6 +302,9 @@ namespace QuizComputation.Model.GenericRepository
             return quizList;
         }
 
+        /// <summary>
+        /// Add Question and option into Quiz
+        /// </summary>
         public static void AddQuestionWithOption(string commandText, Dictionary<string, object> parameters)
         {
             using (QuizComputation_452Entities _context = new QuizComputation_452Entities())
@@ -313,7 +335,10 @@ namespace QuizComputation.Model.GenericRepository
             }
         }
 
-
+        /// <summary>
+        /// Get Admin Profile details
+        /// </summary>
+        /// <returns>Admin Profile Info.</returns>
         public static AdminModel GetAdminProfile(string commandText, Dictionary<string, object> parameters)
         {
             AdminModel _adminModel = new AdminModel();
@@ -363,6 +388,10 @@ namespace QuizComputation.Model.GenericRepository
             return _adminModel;
         }
 
+        /// <summary>
+        /// Update Admin profile after changes.
+        /// </summary>
+        /// <returns>1 or 0</returns>
         public static int UpdateAdminProfile(string commandText, Dictionary<string, object> parameters)
         {
             int IsRowAffected = 0;
@@ -394,6 +423,10 @@ namespace QuizComputation.Model.GenericRepository
             return IsRowAffected;
         }
 
+        /// <summary>
+        /// For Edit Quiz Get Quiz Details with options
+        /// </summary>
+        /// <returns>Quiz , question and options</returns>
         public static CustomQuizModel GetQuizWithQuestionsAndOptions(int quizId)
         {
             var quizModelList = new CustomQuizModel();
@@ -475,6 +508,10 @@ namespace QuizComputation.Model.GenericRepository
             return quizModelList;
         }
 
+        /// <summary>
+        /// Update Quiz into DB After changes
+        /// </summary>
+        /// <param name="quizModel"></param>
         public static void UpdateQuiz(CustomQuizModel quizModel)
         {
             QuizComputation_452Entities _context = new QuizComputation_452Entities();
@@ -524,6 +561,10 @@ namespace QuizComputation.Model.GenericRepository
             }
         }
 
+        /// <summary>
+        /// User Side show Created All Quiz List
+        /// </summary>
+        /// <returns></returns>
         public static List<QuizModel> GetQuizListForUser(string commandText, Dictionary<string, object> parameters)
         {
 
@@ -576,7 +617,11 @@ namespace QuizComputation.Model.GenericRepository
             return result;
         }
 
-        public static string GetQuestionByQuizId(string commandText, Dictionary<string, object> parameters)
+        /// <summary>
+        /// Get Question From Question ID 
+        /// </summary>
+        /// <returns>Particular Question Text : string</returns>
+        public static string GetQuestionByQuestionID(string commandText, Dictionary<string, object> parameters)
         {
 
             string question_text = "";
@@ -610,11 +655,7 @@ namespace QuizComputation.Model.GenericRepository
                                 {
                                     QuestionModel QuestionModel = new QuestionModel();
 
-                                    int QuizID = DBHelper.ConvertStringToInt(reader["Quiz_id"].ToString());
-                                    int QuestionID = DBHelper.ConvertStringToInt(reader["Question_id"].ToString());
                                     question_text = reader["Question_txt"].ToString();
-                                    QuestionModel.Quiz_id = QuizID;
-                                    QuestionModel.Question_id = QuestionID;
                                     QuestionModel.Question_txt = question_text;
                                     
                                 }
@@ -628,6 +669,10 @@ namespace QuizComputation.Model.GenericRepository
             return question_text;
         }        
         
+        /// <summary>
+        /// Get Question ID
+        /// </summary>
+        /// <returns>Question Top 1 ID</returns>
         public static int GetQuestionId(string commandText, Dictionary<string, object> parameters)
         {
 
@@ -675,6 +720,10 @@ namespace QuizComputation.Model.GenericRepository
             return questionID;
         }
 
+        /// <summary>
+        /// Get Option By Question ID
+        /// </summary>
+        /// <returns>Options</returns>
         public static List<OptionModel> GetOptionByQuestionId(string commandText, Dictionary<string, object> parameters)
         {
 
@@ -725,6 +774,199 @@ namespace QuizComputation.Model.GenericRepository
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Save Quiz Answer of user In DB
+        /// </summary>
+        /// <returns>Row affected</returns>
+        public static int SaveUserAnswer(string commandText, Dictionary<string, object> parameters)
+        {
+            int row_Affected = 0;
+            QuizComputation_452Entities _context = new QuizComputation_452Entities();
+            string connectionString = _context.Database.Connection.ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(commandText, connection))
+                {
+
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = 120;
+
+                    if (parameters != null)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                        }
+                    }
+
+                    row_Affected = command.ExecuteNonQuery();
+
+                }
+            }
+            return row_Affected;
+        }
+
+        /// <summary>
+        /// Calculate Quiz result 
+        /// </summary>
+        /// <returns>Total Marks</returns>
+        public static int CalculateUserQuizResult(string commandText, Dictionary<string, object> parameters)
+        {
+            int Total_Correct_Answer  = 0;
+            QuizComputation_452Entities _context = new QuizComputation_452Entities();
+            string connectionString = _context.Database.Connection.ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(commandText, connection))
+                {
+
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = 120;
+
+                    if (parameters != null)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                        }
+                    }
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Check if there are any rows returned
+                        if (reader.HasRows)
+                        {
+                            // Read each row
+                            while (reader.Read())
+                            {
+                                Total_Correct_Answer = DBHelper.ConvertStringToInt(reader["correctAnswer"].ToString());
+                            }
+                        }
+                    }
+
+                }
+            }
+            return Total_Correct_Answer;
+        }
+
+        /// <summary>
+        /// Delete Quiz From Admin Side
+        /// </summary>
+        public static void DeleteQuizFromDB(string storedProcedureName, Dictionary<string, object> parameters)
+        {
+            QuizComputation_452Entities _context = new QuizComputation_452Entities();
+            string connectionString = _context.Database.Connection.ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                    connection.Open();
+                using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    foreach (var parameter in parameters)
+                    {
+                        command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                    }
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get Admin Profile details
+        /// </summary>
+        /// <returns>Admin Profile Info.</returns>
+        public static UserModel GetUserProfile(string commandText, Dictionary<string, object> parameters)
+        {
+            UserModel _UserModel = new UserModel();
+            QuizComputation_452Entities _context = new QuizComputation_452Entities();
+            string connectionString = _context.Database.Connection.ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(commandText, connection))
+                {
+
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = 120;
+
+                    if (parameters != null)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                        }
+                    }
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                int UserID = DBHelper.ConvertStringToInt(reader["User_id"].ToString());
+                                string Username = reader["username"].ToString();
+                                string UserEmail = reader["Email"].ToString();
+                                string UserPassword = reader["Password_hash"].ToString();
+
+                                _UserModel.User_id = UserID;
+                                _UserModel.Username = Username;
+                                _UserModel.Email = UserEmail;
+                                _UserModel.Password_hash = UserPassword;
+                            }
+                        }
+
+                    }
+
+                }
+            }
+            return _UserModel;
+        }
+
+        /// <summary>
+        /// Update User profile after changes.
+        /// </summary>
+        /// <returns>1 or 0</returns>
+        public static int UpdateUserProfile(string commandText, Dictionary<string, object> parameters)
+        {
+            int IsRowAffected = 0;
+            QuizComputation_452Entities _context = new QuizComputation_452Entities();
+            string connectionString = _context.Database.Connection.ConnectionString;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(commandText, connection))
+                {
+
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = 120;
+
+                    if (parameters != null)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                        }
+                    }
+
+                    IsRowAffected = command.ExecuteNonQuery();
+
+                }
+            }
+            return IsRowAffected;
         }
 
     }

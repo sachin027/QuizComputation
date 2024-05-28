@@ -11,9 +11,17 @@ namespace QuizComputation.Repository.Interface
     {
         List<QuizModel> GetQuizListForUser(QuizModel QuizModel);
 
-        string GetQuestionByQuizID(int QuizID);
+        string GetQuestionByQuestionID(int QuizID);
 
         int GetQuestionId(int QuizId);
         List<OptionModel> GetOptionByQuestionId(int QuestionID);
+
+        int SaveUserAnswer(UserAnswerModel userAnswerModel);
+
+        int UserQuizResult(int QuizID, int UserID);
+
+        UserModel GetUserProfile(int UserId);
+
+        int UpdateUserProfile(UserModel userModel);
     }
 }

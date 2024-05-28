@@ -1,0 +1,59 @@
+﻿@model QuizComputation.Model.CustomModel.UserModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutUserPage.cshtml";
+}
+
+<h2 class="mt-2">Profile</h2>
+
+<form method="post">
+
+    <div class="form-horizontal">
+        <hr />
+
+        <input value="@Model.User_id" name="User_Id" hidden />
+
+        <div class="form-group">
+            <label>Admin Name</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Email Id</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password_hash, new { htmlAttributes = new { @class = "form-control", type = "password" } })
+                @Html.ValidationMessageFor(model => model.Password_hash, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Confirm Password</label>
+            <div class="col-md-10">
+                <input value="@Model.Password_hash" type="password" name="Confirm_password" class="form-control" />
+
+                @Html.ValidationMessageFor(model => model.Password_hash, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" name="submit" class="btn btn-outline-secondary" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    @Html.ActionLink("Back to List", "UserDashboard")
+</div>
+

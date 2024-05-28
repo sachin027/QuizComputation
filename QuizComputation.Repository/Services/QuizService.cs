@@ -12,6 +12,9 @@ namespace QuizComputation.Repository.Services
 {
     public class QuizService : IQuizInterface
     {
+        /// <summary>
+        /// Create new quiz
+        /// </summary>
         public QuizModel CreateQuiz(QuizModel _quizModel)
         {
             try
@@ -35,6 +38,9 @@ namespace QuizComputation.Repository.Services
             }
         }
 
+        /// <summary>
+        /// Get created Quiz List
+        /// </summary>
         public List<QuizModel> GetCreatedQuizList(QuizModel _quizModel)
         {
             try
@@ -51,6 +57,9 @@ namespace QuizComputation.Repository.Services
             }
         }
 
+        /// <summary>
+        /// Add Question With option In quiz
+        /// </summary>
         public void AddQuestion(List<OptionQuestionModel> _QustionAddingModel)
         {
             string AddQuestionsAndOptions = "SP_AddQuestionsWithOptions";
@@ -79,6 +88,20 @@ namespace QuizComputation.Repository.Services
                 GenericRepository.AddQuestionWithOption(AddQuestionsAndOptions, Parameters);
             }
 
+        }
+
+        /// <summary>
+        /// Delete Quiz From Admin Side
+        /// </summary>
+        public void DeleteQuizFromDB(int QuizId)
+        {
+            string SP_DeleteQuiz = "SP_DeleteQuiz";
+            Dictionary<string, object> parameters = new Dictionary<string, object>()
+            {
+                {"@QuizId" ,QuizId},
+            };
+
+            GenericRepository.DeleteQuizFromDB("SP_DeleteQuiz", parameters);
         }
     }
 }

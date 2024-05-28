@@ -1,4 +1,5 @@
-﻿using QuizComputation.Model.CustomModel;
+﻿using QuizComputation.CustomFilter;
+using QuizComputation.Model.CustomModel;
 using QuizComputation.Model.GenericRepository;
 using QuizComputation.Repository.Services;
 using System;
@@ -9,22 +10,31 @@ using System.Web.Mvc;
 
 namespace QuizComputation.Controllers
 {
+    [CustomAuthorize]
+    [CustomAdminAuthorize]
     public class AdminController : Controller
     {
         QuizService _quizService = new QuizService();
         AdminService _adminService = new AdminService();
+
         // GET: Admin
         public ActionResult AdminDashboard(QuizModel _quizModel)
         {
+            ViewBag.userName = SessionHelper.SessionHelper.username;
             List<QuizModel> _QuizList = _quizService.GetCreatedQuizList(_quizModel);
             return View(_QuizList);
         }
 
+        /// <summary>
+        /// Create Quiz Page.
+        /// </summary>
         public ActionResult CreateQuiz()
         {
             ViewBag.CreatedByValue = SessionHelper.SessionHelper.user_id;
             return View();
         }
+
+        // POST: Create Quiz
         [HttpPost]
         public ActionResult CreateQuiz(QuizModel _quizModel)
         {
@@ -58,6 +68,8 @@ namespace QuizComputation.Controllers
             }
         }
 
+        /// <summary>
+        /// Add Question and option into Quiz
         public ActionResult AddQuestionIntoQuiz(int QuizID , string description , string title)
         {
             try
@@ -89,8 +101,11 @@ namespace QuizComputation.Controllers
                 throw ex;
             }
         }
-
-
+        /// </summary>
+        
+        
+        /// <summary>
+        /// Get Admin Profile for update
         public ActionResult AdminProfile(int id = 1)
         {
 
@@ -117,7 +132,11 @@ namespace QuizComputation.Controllers
                 return View();
             }
         }
-
+        /// </summary>
+        
+        
+        /// <summary>
+        /// Edit Quiz
         public ActionResult EditQuiz(int QuizID)
         {
             ViewBag.created_by = SessionHelper.SessionHelper.user_id;
@@ -126,7 +145,7 @@ namespace QuizComputation.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditQuiz(CustomQuizModel customQuizModel)  //model object coming null 
+        public ActionResult EditQuiz(CustomQuizModel customQuizModel) 
         {
             try
             {
@@ -137,6 +156,27 @@ namespace QuizComputation.Controllers
             {
                 throw ex;
             }
+        }
+        /// </summary>
+        
+
+        /// <summary>
+        /// Delete Quiz 
+        /// </summary>
+        public ActionResult DeleteQuiz(int QuizId)
+        {
+            _quizService.DeleteQuizFromDB(QuizId);
+            return RedirectToAction("AdminDashboard", "Admin");
+        }
+
+        /// <summary>
+        /// Log Out From Admin 
+        /// </summary>
+        public ActionResult Logout()
+        {
+            Session.Clear();
+            TempData["success"] = "Logout successfully ";
+            return RedirectToAction("Login", "Login");
         }
 
     }
