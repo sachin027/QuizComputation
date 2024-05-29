@@ -67,7 +67,7 @@ namespace QuizComputation.Repository.Services
         /// <summary>
         /// Get all created Quiz List For user
         /// </summary>
-        public List<QuizModel> GetQuizListForUser(QuizModel QuizModel)
+        public List<QuizModel> GetQuizListForUser()
         {
             List<QuizModel> QuizzeModelList = new List<QuizModel>();
             string QuizListForUser = "GetQuizListForUser";

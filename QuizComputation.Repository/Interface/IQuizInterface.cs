@@ -11,7 +11,7 @@ namespace QuizComputation.Repository.Interface
     {
         QuizModel CreateQuiz(QuizModel quizModel);
 
-        List<QuizModel> GetCreatedQuizList(QuizModel quizModel);
+        List<QuizModel> GetCreatedQuizList();
 
         void DeleteQuizFromDB(int QuizId);
     }

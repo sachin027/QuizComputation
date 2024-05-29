@@ -1,10 +1,12 @@
-﻿using QuizComputation.CustomFilter;
+﻿using QuizComputation.Common;
+using QuizComputation.CustomFilter;
 using QuizComputation.Model.CustomModel;
 using QuizComputation.Model.GenericRepository;
 using QuizComputation.Repository.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -16,11 +18,12 @@ namespace QuizComputation.Controllers
     {
         UserService _userService = new UserService();
         // GET: User
-        public ActionResult UserDashboard(QuizModel quizModel) 
+        public async Task<ActionResult> UserDashboard(QuizModel quizModel) 
         {
             ViewBag.UserId = SessionHelper.SessionHelper.user_id;
             ViewBag.userName = SessionHelper.SessionHelper.username;
-            List<QuizModel> _quizList = _userService.GetQuizListForUser(quizModel);
+            List<QuizModel> _quizList = await WebAPIHelper.GetQuizListForUser();
+            //_userService.GetQuizListForUser();
             return View(_quizList);
         }
 
@@ -76,7 +79,6 @@ namespace QuizComputation.Controllers
             int isAnswers = _userService.SaveUserAnswer(_UserAnswer);
             return Json(isAnswers, JsonRequestBehavior.AllowGet);
         }
-
 
         public ActionResult QuizResult(int QuizID , int UserId)
         {

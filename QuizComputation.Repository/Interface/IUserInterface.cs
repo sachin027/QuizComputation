@@ -9,7 +9,7 @@ namespace QuizComputation.Repository.Interface
 {
     public interface IUserInterface
     {
-        List<QuizModel> GetQuizListForUser(QuizModel QuizModel);
+        List<QuizModel> GetQuizListForUser();
 
         string GetQuestionByQuestionID(int QuizID);
 

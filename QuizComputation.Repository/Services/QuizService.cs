@@ -41,7 +41,7 @@ namespace QuizComputation.Repository.Services
         /// <summary>
         /// Get created Quiz List
         /// </summary>
-        public List<QuizModel> GetCreatedQuizList(QuizModel _quizModel)
+        public List<QuizModel> GetCreatedQuizList( )
         {
             try
             {

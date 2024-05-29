@@ -1,10 +1,12 @@
-﻿using QuizComputation.CustomFilter;
+﻿using QuizComputation.Common;
+using QuizComputation.CustomFilter;
 using QuizComputation.Model.CustomModel;
 using QuizComputation.Model.GenericRepository;
 using QuizComputation.Repository.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -18,12 +20,32 @@ namespace QuizComputation.Controllers
         AdminService _adminService = new AdminService();
 
         // GET: Admin
-        public ActionResult AdminDashboard(QuizModel _quizModel)
+        public async Task<ActionResult> AdminDashboard()
         {
-            ViewBag.userName = SessionHelper.SessionHelper.username;
-            List<QuizModel> _QuizList = _quizService.GetCreatedQuizList(_quizModel);
-            return View(_QuizList);
+            try
+            {
+                ViewBag.userName = SessionHelper.SessionHelper.username;
+                List<QuizModel> ans = await WebAPIHelper.CreatedQuizListForUser();
+                if(ans != null)
+                {
+                    return View(ans);
+                }
+                else
+                {
+                    return View("Login");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            //ViewBag.userName = SessionHelper.SessionHelper.username;
+            //List<QuizModel> _QuizList = _quizService.GetCreatedQuizList(_quizModel);
+            //return View(_QuizList);
         }
+
+
 
         /// <summary>
         /// Create Quiz Page.
@@ -36,13 +58,14 @@ namespace QuizComputation.Controllers
 
         // POST: Create Quiz
         [HttpPost]
-        public ActionResult CreateQuiz(QuizModel _quizModel)
+        public async Task<ActionResult> CreateQuiz(QuizModel _quizModel)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    QuizModel _quiz = _quizService.CreateQuiz(_quizModel);
+                    QuizModel _quiz = await WebAPIHelper.CreateQuiz(_quizModel);
+                    //_quizService.CreateQuiz(_quizModel);
 
                     if(_quizModel != null )
                     {
