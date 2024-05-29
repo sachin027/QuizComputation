@@ -186,10 +186,24 @@ namespace QuizComputation.Controllers
         /// <summary>
         /// Delete Quiz 
         /// </summary>
-        public ActionResult DeleteQuiz(int QuizId)
+        public async Task<ActionResult> DeleteQuiz(int QuizId)
         {
             _quizService.DeleteQuizFromDB(QuizId);
             return RedirectToAction("AdminDashboard", "Admin");
+            //try
+            //{
+            //    // Call the WebAPIHelper to delete the quiz
+            //    await WebAPIHelper.DeleteQuiz(QuizId);
+
+            //        TempData["success"] = "Quiz deleted successfully.";
+            //    }
+            //catch (Exception ex)
+            //{
+            //    TempData["error"] = "An error occurred while deleting the quiz.";
+            //    // Log the exception
+            //}
+
+            //return RedirectToAction("AdminDashboard", "Admin");
         }
 
         /// <summary>

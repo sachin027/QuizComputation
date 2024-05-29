@@ -72,5 +72,14 @@ namespace QuizComputation.Common
             };
             return _QuizList;
         }
+
+        public static async Task DeleteQuiz(int QuizId)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ApiUrl);
+                await client.DeleteAsync($"UserAPI/DeleteQuiz?QuizId={QuizId}");
+            }
+        }
     }
 }

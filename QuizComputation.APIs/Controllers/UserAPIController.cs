@@ -31,11 +31,11 @@ namespace QuizComputation.APIs.Controllers
             return _QuizListForUser;
         }
 
-        //[HttpPost]
-        //[Route("api/UserAPI/DeleteQuiz")]
-        //public void DeleteQuiz(int QuizId)
-        //{
-        //    _QuizInterface.DeleteQuizFromDB(QuizId);
-        //}
+        [HttpPost]
+        [Route("api/UserAPI/DeleteQuiz")]
+        public void DeleteQuiz(int QuizId)
+        {
+            _QuizInterface.DeleteQuizFromDB(QuizId);
+        }
     }
 }
